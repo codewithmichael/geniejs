@@ -49,7 +49,7 @@ module, separated from the noisier application-wide messaging hub.
 
 In order to facilitate external communications, as well as filter and translate
 incomming and outgoing messages, Genie based modules optionally provide an
-event mapper, `Genie.Duct, which ties two Vent objects together.
+event mapper, `Genie.Duct`, which ties two Vent objects together.
 
 Event messages from a remote Vent -- the Marionette.Application.vent object by
 default -- can be mapped to trigger events on the module's local Vent, and
