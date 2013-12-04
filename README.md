@@ -1,6 +1,6 @@
 # Backbone.Marionette.Genie
 
-## About Genie
+## About GenieJS
 
 Genie encapsulates the process of building portable and reusable Marionette
 application modules, along with some commonly used helper objects and messaging
