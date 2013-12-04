@@ -110,8 +110,14 @@ The following example uses a `region` based Genie module and a simple template t
     
     <!-- Genie-based Marionette Application -->
     <script>
+
+      // Create a new application
+      App = new Marionette.Application();
+
+      // Create a generic view using #genie-template
+      var MyView = Marionette.ItemView.extend({template: '#genie-template'});
     
-      // Genie
+      // Create a Genie
       var MyGenie = Genie.extend({
         
         // Include a local messaging system
@@ -146,12 +152,6 @@ The following example uses a `region` based Genie module and a simple template t
 
         }),
       });
-
-      // A generic view using #genie-template
-      var MyView = Marionette.ItemView.extend({template: '#genie-template'});
-
-      // Create a new application
-      App = new Marionette.Application();
 
       // Create Genie modules for the "#mod1" and "#mod2" divs
       App.module('Genie1', new MyGenie({region:'#mod1'}));
