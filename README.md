@@ -98,7 +98,7 @@ The following example uses a `region` based Genie module and a simple template t
     <script src="backbone.marionette.genie.min.js"></script>
   </head>
   <body>
-   
+    
     <!-- Module Rendering Regions -->
     <div id="mod1"></div>
     <div id="mod2"></div>
@@ -107,46 +107,39 @@ The following example uses a `region` based Genie module and a simple template t
     <script id="genie-template" type="text/template">
       <%= moduleName %> says: Your wish is my command
     </script>
-
+    
     <!-- Genie-based Marionette Application -->
     <script>
-
+    
       // Genie
       var MyGenie = Genie.extend({
-
+        
         // Include a local messaging system
         vent: true,
-
+        
         // Map the local messaging system
         duct: Genie.Duct.extend({
-          
           initialize: function(){
-
             // Map the module's "start" message to the local vent's "show" message
             // i.e. "start" on this.mod -> "show" on this.vent
             this.fromMod('start', 'show');
-
           }
         }),
-
+        
         // Implement model logic
         controller: Genie.Controller.extend({
-
+          
           initialize: function(){
-
             // Add local message listeners
             // Listen to this.duct.local (e.g. this.vent)
             this.listenLocal('show', this.show);
-
           },
-
+          
           // Handler for the 'show' event message
           show: function(){
-
             // Prepare the view data
             var model = new Backbone.Model({moduleName: this.mod.moduleName});
             var view = new MyView({model: model});
-
             // Show the view in the model's region object
             this.mod.region.show(view);
           }
@@ -160,10 +153,8 @@ The following example uses a `region` based Genie module and a simple template t
       // Create a new application
       App = new Marionette.Application();
 
-      // Create a Genie module for the "#mod1" div
+      // Create Genie modules for the "#mod1" and "#mod2" divs
       App.module('Genie1', new MyGenie({region:'#mod1'}));
-
-      // Create a Genie module for the "#mod2" div
       App.module('Genie2', new MyGenie({region:'#mod2'}));
 
       // Start the application
