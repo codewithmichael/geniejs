@@ -33,7 +33,7 @@ var myGenie = new Genie({
   })
 });
 
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
 App.module('MyGenie', myGenie);
 
@@ -51,7 +51,7 @@ var MyGenie = Genie.extend({
   })
 });
 
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
 App.module('MyGenie', new ExtendedGenie());
 
@@ -73,7 +73,7 @@ var MyController = Genie.Controller.extend({
 
 myGenie.addController(MyController);
 
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
 App.module('MyGenie', myGenie);
 
@@ -83,7 +83,7 @@ App.start();
 #### After Module Initialization
 
 ```js
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
 App.module("MyGenie", new Genie());
 
@@ -125,7 +125,7 @@ when it is initialized.
 #### Example
 
 ```js
-var myGenie = new Genie({
+var MyGenie = Genie.extend({
 
   controller: Genie.Controller.extend({
     initialize: function(options){
@@ -142,9 +142,9 @@ var myGenie = new Genie({
 
 });
 
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
-App.module('MyGenie', myGenie);
+App.module('MyGenie', new MyGenie());
 
 App.start({
   wish: "one more wish, ad infinitum"
@@ -153,8 +153,8 @@ App.start({
 
 ### controllerOptions
 
-The `controllerOptions` option accepts a JSON style object containing options
-to be passed to the controller upon initialization when the module is started.
+The `controllerOptions` option accepts an object containing options to be
+passed to the controller upon initialization when the module is started.
 
 If used in conjuntion with `passStartOptionsToController` the provided options
 are merged with the module's startup options, overriding any startup options in
@@ -165,7 +165,7 @@ If an initialized controller object is provided this option has no effect.
 #### Example
 
 ```js
-var myGenie = new Genie({
+var MyGenie = Genie.extend({
 
   controller: Genie.Controller.extend({
     initialize: function(options){
@@ -181,14 +181,15 @@ var myGenie = new Genie({
   passStartOptionsToController: true,
 
   controllerOptions: {
+    // This overrides the "wish" option in App.start()
     wish: "more wishes"
   }
 
 });
 
-App = new Marionette.Application();
+var App = new Marionette.Application();
 
-App.module('MyGenie', myGenie);
+App.module('MyGenie', new MyGenie());
 
 App.start({
   wish: "one more wish, ad infinitum"
