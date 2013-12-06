@@ -1,12 +1,11 @@
 // GenieJS (Backbone.Marionette.Genie)
 // -----------------------------------
-// v0.3.3
+// v0.3.4
 // 
 // Copyright (c) 2013 Michael Spencer, Trynd, LLC
 // Distributed under the MIT license
 //
 // http://github.com/xmxspencer/geniejs
-
 
 (function(Backbone, Marionette, _) {
   "use strict";
@@ -231,13 +230,21 @@
     // Add a Region to the module
     addRegion: function(name, definition, options) {
 
+      if (!_.isString(name)) {
+        options = definition;
+        definition = name;
+        name = 'region';
+      }
+
       if (name != null && definition != null) {
 
         var isFunction, isString, region;
 
         // If the definition is an array, assume a definition and options
         if (_.isArray(definition)) {
-          options = definition[1];
+          if (!_.isObject(options)) {
+            options = definition[1];
+          }
           definition = definition[0];
         }
 
@@ -396,9 +403,18 @@
   // Used to add "region" or "regions" options to the Genie object after
   // instantiation
   Genie.prototype.addRegion = function(name, definition, options) {
+    if (!_.isString(name)) {
+      options = definition;
+      definition = name;
+      name = 'region';
+    }
     var region = definition;
     if (_.isObject(options)) {
-      region = [region, _.extend({}, options)];
+      if (_.isArray(region)) {
+        region = [region[0], _.extend({}, options)];
+      } else {
+        region = [region, _.extend({}, options)];
+      }
     }
     if (name === 'region') {
       this.options.region = region;
@@ -407,6 +423,17 @@
         this.options.regions = {};
       }
       this.options.regions[name] = region;
+    }
+    return;
+  }
+
+  // Used to add "region" or "regions" options to the Genie object after
+  // instantiation
+  Genie.prototype.addRegions = function(definitions) {
+    if (_.isObject(definitions)) {
+      _.each(definitions, function(region, name) {
+        this.addRegion(name, region);
+      }, this);
     }
     return;
   }
