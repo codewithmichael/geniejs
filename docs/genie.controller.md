@@ -1,8 +1,8 @@
 # Genie.Controller
 
 The `Genie.Controller` helper object is a simple wrapper around
-`Marionette.Controller` which includes Genie's standard `app` and `mod`
-properties upon initialization.
+`Marionette.Controller` which includes Genie's standard `app`, `mod`, and
+`options` properties upon initialization.
 
 A common use for a `controller` object is to use it in conjunction with an
 assigned `router` to handle routing tasks, but it can be used much more
@@ -21,6 +21,23 @@ of the following ways:
 *   As part of the Genie module's options
 *   As a property of an extended Genie module
 *   Using Genie's `addController()` method
+
+An associated Controller object can be accessed via the module's `controller`
+property.
+
+Valid values for defining the controller are:
+
+*   A Controller function (preferred)
+    *   Usually generated via `Genie.Controller.extend()`
+    *   Will be instantiated when the module is started
+    *   Can recieve additional options when the module is started
+*   An instantiated Controller Object
+    *   Generated via JavaScript's `new` keyword, e.g. `new Genie.Controller()`
+    *   Will **not** recieve any additional options when the module is started
+*   `true`
+    *   If `true` is passed as the `controller` option value an empty
+        `Genie.Controller` object will be created and associated with the
+        Genie module
 
 ### As an Option
 

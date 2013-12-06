@@ -1,8 +1,8 @@
 # Genie.Router
 
 The `Genie.Router` helper object is a simple wrapper around
-`Marionette.AppRouter` which includes Genie's standard `app` and `mod`
-properties upon initialization.
+`Marionette.AppRouter` which includes Genie's standard `app`, `mod`, and
+`options` properties upon initialization.
 
 A `router` object is used to map routes, defined via the `routes` and
 `appRoutes` options, to functions in the router or the associated
@@ -21,6 +21,22 @@ of the following ways:
 *   As part of the Genie module's options
 *   As a property of an extended Genie module
 *   Using Genie's `addRouter()` method
+
+An associated Router object can be accessed via the module's `router` property.
+
+Valid values for defining the router are:
+
+*   A Router function (preferred)
+    *   Usually generated via `Genie.Router.extend()`
+    *   Will be instantiated when the module is started
+    *   Can recieve additional options when the module is started
+*   An instantiated Router Object
+    *   Generated via JavaScript's `new` keyword, e.g. `new Genie.Router()`
+    *   Will **not** recieve any additional options when the module is started
+*   `true`
+    *   If `true` is passed as the `router` option value an empty
+        `Genie.Router` object will be created and associated with the Genie
+        module
 
 ### As an Option
 
@@ -130,7 +146,6 @@ Controller from the module.
 
 ## Associated Options
 
-
 When a router is added to a Genie module object, aside from the
 `router` option, the following additional options may be provided to alter
 the router's initialization process:
@@ -204,7 +219,7 @@ var MyGenie = Genie.extend({
   passStartOptionsToRouter: true,
 
   routerOptions: {
-    // This overrides the "routes" options in App.start()
+    // This overrides the "routes" option in App.start()
     routes: {
       "more-wishes": "showGreed"
     }
