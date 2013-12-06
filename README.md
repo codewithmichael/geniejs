@@ -40,8 +40,8 @@ part of the module creation process.
 #### Genie.Vent
 
 In addition to the standard Marionette objects, Genie also incorporates a
-wrapped Backbone.Events object, `Genie.Vent`, which is similar to the
-Backbone.Wreqr.EventAggregator used by Marionette, but includes an
+wrapped `Backbone.Events` object, `Genie.Vent`, which is similar to the
+`Backbone.Wreqr.EventAggregator` used by Marionette, but includes an
 `initialize()` method to standardize the object creation process.
 
 Giving a module a dedicated Vent object allows for localized messaging within a

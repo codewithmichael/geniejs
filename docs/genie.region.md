@@ -18,8 +18,8 @@ option passing during instantiation by the parent Genie module and will be set
 to the correct values automatically so long as the Region is added in one
 of the following ways:
 
-*   As part of the Genie module's options
 *   As a property of an extended Genie module
+*   As part of the Genie module's options
 *   Using Genie's `addRegion()` method
 *   Using Genie's `addRegions()` method
 
@@ -32,72 +32,17 @@ Valid values for defining the region are:
     *   Usually generated via `Genie.Region.extend()`
     *   Will be instantiated when the module is started
     *   Can recieve additional options when the module is started
+*   A page element selector string
+    *   i.e. `"#main"`
+    *   If an element selector string is passed as the `region` option value an
+        empty `Genie.Region` object will be instantiated when the moduel is
+        started, passing the selector string as the Region's `el` option, and
+        automatically associated with the Genie module
+    *   Can recieve additional options when the module is started
 *   An instantiated Region Object
     *   Generated via JavaScript's `new` keyword, e.g.
         `new Genie.Region({el: "#main"})`
     *   Will **not** recieve any additional options when the module is started
-*   A page element selector string
-    *   i.e. `"#main"`
-    *   If an element selector string is passed as the `region` option value an
-        empty `Genie.Region` object will be created, passing the selector string
-        as the Region's `el` option, and associated with the Genie module
-
-### As an Option
-
-#### Option: region
-
-```js
-var MyView = Marionette.ItemView.extend({
-  template: _.template("Don't wish for <%= wish %>")
-});
-
-var myGenie = new Genie({
-  region: Genie.Region.extend({
-    el: "#main",
-    initialize: function(){
-      var myModel = new Backbone.Model({wish: "more wishes"});
-      var myView = new MyView({model: myModel});
-      this.show(myView);
-    }
-  })
-});
-
-var App = new Marionette.Application();
-
-App.module("MyGenie", myGenie);
-
-App.start();
-```
-
-#### Option: regions
-
-```js
-var MyView = Marionette.ItemView.extend({
-  template: _.template("Don't wish for <%= wish %>")
-});
-
-var myGenie = new Genie({
-  regions: {
-    region1: ["#rule1", {wish: "more wishes"}],
-    region2: ["#rule2", {wish: "another Genie"}]
-  },
-  controller: Genie.Controller.extend({
-    initialize: function(){
-      _.each(this.mod.regions, function(region){
-        var myModel = new Backbone.Model({wish: region.options.wish});
-        var myView = new MyView({model: myModel});
-        region.show(myView);
-      });
-    }
-  })
-});
-
-var App = new Marionette.Application();
-
-App.module("MyGenie", myGenie);
-
-App.start();
-```
 
 ### As an Extended Property
 
@@ -156,7 +101,68 @@ App.module("MyGenie", new MyGenie());
 App.start();
 ```
 
+### As an Option
+
+#### Option: region
+
+```js
+var MyView = Marionette.ItemView.extend({
+  template: _.template("Don't wish for <%= wish %>")
+});
+
+var myGenie = new Genie({
+  region: Genie.Region.extend({
+    el: "#main",
+    initialize: function(){
+      var myModel = new Backbone.Model({wish: "more wishes"});
+      var myView = new MyView({model: myModel});
+      this.show(myView);
+    }
+  })
+});
+
+var App = new Marionette.Application();
+
+App.module("MyGenie", myGenie);
+
+App.start();
+```
+
+#### Option: regions
+
+```js
+var MyView = Marionette.ItemView.extend({
+  template: _.template("Don't wish for <%= wish %>")
+});
+
+var myGenie = new Genie({
+  regions: {
+    region1: ["#rule1", {wish: "more wishes"}],
+    region2: ["#rule2", {wish: "another Genie"}]
+  },
+  controller: Genie.Controller.extend({
+    initialize: function(){
+      _.each(this.mod.regions, function(region){
+        var myModel = new Backbone.Model({wish: region.options.wish});
+        var myView = new MyView({model: myModel});
+        region.show(myView);
+      });
+    }
+  })
+});
+
+var App = new Marionette.Application();
+
+App.module("MyGenie", myGenie);
+
+App.start();
+```
+
 ### Using addRegion()
+
+**Note:** A Genie module can only have one object assigned to its `region`
+property at a time, so using `addRegion()` without a defined `name` parameter
+or with a name of `"region"` will overwrite any existing value.
 
 #### Definition
 
@@ -230,6 +236,10 @@ App.start();
 ```
 
 ### Using addRegions()
+
+**Note:** A Genie module can only have one object assigned to its `region`
+property at a time, so using `addRegions()` with a name of `"region"` will
+overwrite any existing value.
 
 #### Definition
 

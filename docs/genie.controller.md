@@ -18,8 +18,8 @@ option passing during instantiation by the parent Genie module and will be set
 to the correct values automatically so long as the Controller is added in one
 of the following ways:
 
-*   As part of the Genie module's options
 *   As a property of an extended Genie module
+*   As part of the Genie module's options
 *   Using Genie's `addController()` method
 
 An associated Controller object can be accessed via the module's `controller`
@@ -31,31 +31,14 @@ Valid values for defining the controller are:
     *   Usually generated via `Genie.Controller.extend()`
     *   Will be instantiated when the module is started
     *   Can recieve additional options when the module is started
+*   `true`
+    *   If `true` is passed as the `controller` option value an empty
+        `Genie.Controller` object will be instantiated when the module is
+        started and automatically associated with the Genie module
+    *   Can recieve additional options when the module is started
 *   An instantiated Controller Object
     *   Generated via JavaScript's `new` keyword, e.g. `new Genie.Controller()`
     *   Will **not** recieve any additional options when the module is started
-*   `true`
-    *   If `true` is passed as the `controller` option value an empty
-        `Genie.Controller` object will be created and associated with the
-        Genie module
-
-### As an Option
-
-```js
-var myGenie = new Genie({
-  controller: Genie.Controller.extend({
-    initialize: function(options){
-      alert(this.mod.moduleName + " says: Your wish is my command");
-    }
-  })
-});
-
-var App = new Marionette.Application();
-
-App.module('MyGenie', myGenie);
-
-App.start();
-```
 
 ### As an Extended Property
 
@@ -75,7 +58,28 @@ App.module('MyGenie', new ExtendedGenie());
 App.start();
 ```
 
+### As an Option
+
+```js
+var myGenie = new Genie({
+  controller: Genie.Controller.extend({
+    initialize: function(options){
+      alert(this.mod.moduleName + " says: Your wish is my command");
+    }
+  })
+});
+
+var App = new Marionette.Application();
+
+App.module('MyGenie', myGenie);
+
+App.start();
+```
+
 ### Using addController()
+
+**Note:** A Genie module can only have one object assigned to its `controller`
+property at a time, so using `addController()` overwrites any existing value.
 
 #### Before Module Initialization
 
@@ -115,14 +119,14 @@ App.module("MyGenie").addController(MyController);
 App.start();
 ```
 
-**Note:** Controllers added after module initialization will not be
+**Note:** Controllers added after a module has started will not be
 automatically tied to a module's already existing `router` instance.
 
-Assigning the `router` object's controller after initialization can be
+Assigning the `router` object's controller after a module has started can be
 performed manually, but it's not recommended (and not specifically supported).
 If your module is to contain both `router` and `controller` options they should
-be assigned before initialization, or the router should be added after the
-controller.
+be assigned before the module is started, or the router should be added after
+the controller.
 
 ## Associated Options
 

@@ -18,8 +18,8 @@ option passing during instantiation by the parent Genie module and will be set
 to the correct values automatically so long as the Router is added in one
 of the following ways:
 
-*   As part of the Genie module's options
 *   As a property of an extended Genie module
+*   As part of the Genie module's options
 *   Using Genie's `addRouter()` method
 
 An associated Router object can be accessed via the module's `router` property.
@@ -30,37 +30,14 @@ Valid values for defining the router are:
     *   Usually generated via `Genie.Router.extend()`
     *   Will be instantiated when the module is started
     *   Can recieve additional options when the module is started
+*   `true`
+    *   If `true` is passed as the `router` option value an empty
+        `Genie.Router` object will be instantiated when the module is started
+        and automatically associated with the Genie module
+    *   Can recieve additional options when the module is started
 *   An instantiated Router Object
     *   Generated via JavaScript's `new` keyword, e.g. `new Genie.Router()`
     *   Will **not** recieve any additional options when the module is started
-*   `true`
-    *   If `true` is passed as the `router` option value an empty
-        `Genie.Router` object will be created and associated with the Genie
-        module
-
-### As an Option
-
-```js
-var myGenie = new Genie({
-  router: Genie.Router.extend({
-    routes: {
-      "more-wishes": "showMoreWishes"
-    },
-    showMoreWishes: function(){
-      $('body').append("<p>You wished for more wishes</p>");
-      this.navigate('');
-    }
-  })
-});
-
-var App = new Marionette.Application();
-
-App.module("MyGenie", myGenie);
-
-App.start();
-
-Backbone.history.start();
-```
 
 ### As an Extended Property
 
@@ -86,7 +63,34 @@ App.start();
 Backbone.history.start();
 ```
 
+### As an Option
+
+```js
+var myGenie = new Genie({
+  router: Genie.Router.extend({
+    routes: {
+      "more-wishes": "showMoreWishes"
+    },
+    showMoreWishes: function(){
+      $('body').append("<p>You wished for more wishes</p>");
+      this.navigate('');
+    }
+  })
+});
+
+var App = new Marionette.Application();
+
+App.module("MyGenie", myGenie);
+
+App.start();
+
+Backbone.history.start();
+```
+
 ### Using addRouter()
+
+**Note:** A Genie module can only have one object assigned to its `router`
+property at a time, so using `addRouter()` overwrites any existing value.
 
 #### Before Module Initialization
 
@@ -138,11 +142,11 @@ App.start();
 Backbone.history.start();
 ```
 
-**Note:** Routers added after module initialization will attempt to inherit
-any assigned controller just as if they were added before initialization.
-However, if the Controller is also to be added after initialization it should
-be added before the Router to allow the Router to inherit the instantiated
-Controller from the module.
+**Note:** Routers added after module initialization or after a module has
+started will attempt to inherit any assigned controller just as if they were
+added before initialization. However, if the Controller is also to be added
+after module startup it should be added before the Router to allow the Router
+to inherit the instantiated Controller from the module.
 
 ## Associated Options
 
