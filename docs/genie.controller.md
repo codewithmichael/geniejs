@@ -116,7 +116,7 @@ the controller's initialization process:
 *   `passStartOptionsToController` - boolean
 *   `controllerOptions` - object
 
-### passStartOptionsToController
+### Associated Option: passStartOptionsToController
 
 If `passStartOptionsToController` is set to `true` the module's startup options
 (usually the options passed to `App.start()`) will be passed to the controller
@@ -151,7 +151,7 @@ App.start({
 });
 ```
 
-### controllerOptions
+### Associated Option: controllerOptions
 
 The `controllerOptions` option accepts an object containing options to be
 passed to the controller upon initialization when the module is started.
