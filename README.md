@@ -1,10 +1,12 @@
 # Backbone.Marionette.Genie
 
-## About Genie
+## About GenieJS
 
 Genie encapsulates the process of building portable and reusable Marionette
 application modules, along with some commonly used helper objects and messaging
 utilities.
+
+Jump to the bottom of the readme for a [basic example](#basic-example) of usage.
 
 ### Modular Architecture
 
@@ -49,7 +51,7 @@ module, separated from the noisier application-wide messaging hub.
 
 In order to facilitate external communications, as well as filter and translate
 incomming and outgoing messages, Genie based modules optionally provide an
-event mapper, `Genie.Duct, which ties two Vent objects together.
+event mapper, `Genie.Duct`, which ties two Vent objects together.
 
 Event messages from a remote Vent -- the Marionette.Application.vent object by
 default -- can be mapped to trigger events on the module's local Vent, and
@@ -77,3 +79,88 @@ GenieJS is currently working with:
 Copyright (c) 2013 Michael Spencer; Trynd, LLC
 
 Distributed under the MIT License.
+
+---
+
+## Basic Example
+
+The following example uses a `region` based Genie module and a simple template to populate two divs, dynamically loading each module's `moduleName` as part of the display content (via a `Marionette.ItemView` and a `Backbone.Model`).
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Script Libraries -->
+    <script src="jquery.min.js"></script>
+    <script src="underscore.min.js"></script>
+    <script src="backbone.min.js"></script>
+    <script src="backbone.marionette.min.js"></script>
+    <script src="backbone.marionette.genie.min.js"></script>
+  </head>
+  <body>
+    
+    <!-- Module Rendering Regions -->
+    <div id="mod1"></div>
+    <div id="mod2"></div>
+    
+    <!-- Templates -->
+    <script id="genie-template" type="text/template">
+      <%= moduleName %> says: Your wish is my command
+    </script>
+    
+    <!-- Genie-based Marionette Application -->
+    <script>
+
+      // Create a new application
+      App = new Marionette.Application();
+
+      // Create a generic view using #genie-template
+      var MyView = Marionette.ItemView.extend({template: '#genie-template'});
+    
+      // Create a Genie
+      var MyGenie = Genie.extend({
+        
+        // Include a local messaging system
+        vent: true,
+        
+        // Map the local messaging system
+        duct: Genie.Duct.extend({
+          initialize: function(){
+            // Map the module's "start" message to the local vent's "show" message
+            // i.e. "start" on this.mod -> "show" on this.vent
+            this.fromMod('start', 'show');
+          }
+        }),
+        
+        // Implement model logic
+        controller: Genie.Controller.extend({
+          
+          initialize: function(){
+            // Add local message listeners
+            // Listen to this.duct.local (e.g. this.vent)
+            this.listenLocal('show', this.show);
+          },
+          
+          // Handler for the 'show' event message
+          show: function(){
+            // Prepare the view data
+            var model = new Backbone.Model({moduleName: this.mod.moduleName});
+            var view = new MyView({model: model});
+            // Show the view in the model's region object
+            this.mod.region.show(view);
+          }
+
+        }),
+      });
+
+      // Create Genie modules for the "#mod1" and "#mod2" divs
+      App.module('Genie1', new MyGenie({region:'#mod1'}));
+      App.module('Genie2', new MyGenie({region:'#mod2'}));
+
+      // Start the application
+      App.start();
+
+    </script>
+  </body>
+</html>
+```
