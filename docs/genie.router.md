@@ -139,7 +139,7 @@ the router's initialization process:
 *   `routerOptions` - object
 *   `controller` - object or function
 
-### passStartOptionsToRouter
+### Associated Option: passStartOptionsToRouter
 
 If `passStartOptionsToRouter` is set to `true` the module's startup options
 (usually the options passed to `App.start()`) will be passed to the router
@@ -174,7 +174,7 @@ App.start({
 Backbone.history.start();
 ```
 
-### routerOptions
+### Associated Option: routerOptions
 
 The `routerOptions` option accepts an object containing options to be passed to
 the router upon initialization when the module is started.
@@ -225,7 +225,7 @@ App.start({
 Backbone.history.start();
 ```
 
-### controller
+### Associated Option: controller
 
 The `controller` option assigns a Controller object to the Genie module, and by
 proxy also assigns the controller to an associated Router object if present.
