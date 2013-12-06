@@ -1,6 +1,6 @@
 // GenieJS (Backbone.Marionette.Genie)
 // -----------------------------------
-// v0.3.4
+// v0.3.5
 // 
 // Copyright (c) 2013 Michael Spencer, Trynd, LLC
 // Distributed under the MIT license
@@ -37,6 +37,7 @@
   // Valid Genie options
   Genie.prototype.validOptions = [
     'startWithParent',
+    'initializer',
     'vent',
     'duct',
     'region',
@@ -114,6 +115,7 @@
       // Incorporate Genie module functions
       _.extend(this, moduleFunctions);
 
+      // Add the module's initializer
       return this.addInitializer(function(startOptions) {
 
         var genieOptions;
@@ -149,6 +151,11 @@
         // Create Router
         if ('router' in genieOptions) {
           this.addRouter(genieOptions.router);
+        }
+
+        // Run custom initializer
+        if ('initializer' in genieOptions) {
+          genieOptions.initializer.apply(this, arguments);
         }
 
         return this;
@@ -374,6 +381,21 @@
       return;
     }
 
+  };
+
+  // Used to add a module initializer to the Genie object after instantiation
+  Genie.prototype.addInitializer = function(initializer) {
+    if (_.isFunction(initializer)) {
+      if (!('initializer' in this.options)) {
+        this.options.initializer = initializer;
+      } else {
+        var oldInitializer = this.options.initializer;
+        this.options.initializer = function(){
+          oldInitializer.apply(this, arguments);
+          initializer.apply(this, arguments);
+        };
+      }
+    }
   };
 
   // Used to add "controller" and "controllerOptions" options to the Genie
