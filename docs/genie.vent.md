@@ -137,27 +137,26 @@ var App = new Marionette.Application();
 
 var MyGenie = Genie.extend({
   controller: Genie.Controller.extend({
-    initialize: function(){
-      this.listenTo(this.mod.vent, 'ready', function(){
-        console.log('controller: module has started and is ready');
-      });
+    ready: function(){
+      console.log('controller: module has started and is ready');
     }
   })
 });
 
 App.module("MyGenie", new MyGenie());
 
+// Start the application
+App.start();
+
 var MyVent = Genie.Vent.extend({
   initialize: function(){
-    this.listenTo(this.mod, 'start', function(){
-      this.trigger('ready');
-    });
+    this.listenTo(this.app.vent, 'done', this.mod.controller.ready);
   }
 });
 
 App.module("MyGenie").addVent(MyVent);
 
-App.start();
+App.vent.trigger('done');
 ```
 
 **Note:** Vents added after a module has started will not be automatically tied
@@ -172,8 +171,8 @@ the vent.
 ## Associated Options
 
 When a vent is added to a Genie module object, aside from the `vent` option,
-the following additional options may be provided to alter the vent's
-initialization process:
+the following additional options may be provided to the Genie object to alter
+the vent's initialization process:
 
 *   `passStartOptionsToVent` - boolean
 *   `ventOptions` - object

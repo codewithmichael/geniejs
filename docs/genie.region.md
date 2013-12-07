@@ -13,10 +13,10 @@ Further documentation and usage information can be found at
 
 ## Setup
 
-As with all Genie helper objects, the `app` and `mod` properties are set via
-option passing during instantiation by the parent Genie module and will be set
-to the correct values automatically so long as the Region is added in one
-of the following ways:
+As with all Genie helper objects, the `app`, `mod`, and `options` properties
+are set via option passing during instantiation by the parent Genie module and
+will be set to the correct values automatically so long as the Region is added
+in one of the following ways:
 
 *   As a property of an extended Genie module
 *   As part of the Genie module's options
@@ -217,6 +217,8 @@ var App = new Marionette.Application();
 
 App.module("MyGenie", new Genie());
 
+App.start();
+
 var MyView = Marionette.ItemView.extend({
   template: _.template("Don't wish for <%= wish %>")
 });
@@ -231,8 +233,6 @@ var MyRegion = Genie.Region.extend({
 });
 
 App.module("MyGenie").addRegion(MyRegion);
-
-App.start();
 ```
 
 ### Using addRegions()
@@ -288,6 +288,8 @@ var App = new Marionette.Application();
 
 App.module("MyGenie", new Genie());
 
+App.start();
+
 var MyView = Marionette.ItemView.extend({
   template: _.template("Don't wish for <%= wish %>")
 });
@@ -304,15 +306,13 @@ App.module("MyGenie").addRegions({
   region1: [MyRegion, {el: "#rule1", wish: "more wishes"}],
   region2: [MyRegion, {el: "#rule2", wish: "another Genie"}]
 });
-
-App.start();
 ```
 
 ## Associated Options
 
 When a region is added to a Genie module object, aside from the
 `region` and `regions` options, the following additional options may be
-provided to alter the regions' initialization process:
+provided to the Genie object to alter the regions' initialization process:
 
 *   `passStartOptionsToRegion` - boolean
 *   `regionOptions` - object

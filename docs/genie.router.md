@@ -13,10 +13,10 @@ Further documentation and usage information can be found at
 
 ## Setup
 
-As with all Genie helper objects, the `app` and `mod` properties are set via
-option passing during instantiation by the parent Genie module and will be set
-to the correct values automatically so long as the Router is added in one
-of the following ways:
+As with all Genie helper objects, the `app`, `mod`, and `options` properties
+are set via option passing during instantiation by the parent Genie module and
+will be set to the correct values automatically so long as the Router is added
+in one of the following ways:
 
 *   As a property of an extended Genie module
 *   As part of the Genie module's options
@@ -125,6 +125,8 @@ var App = new Marionette.Application();
 
 App.module("MyGenie", new Genie());
 
+App.start();
+
 var MyRouter = Genie.Router.extend({
   routes: {
     "more-wishes": "showMoreWishes"
@@ -137,22 +139,20 @@ var MyRouter = Genie.Router.extend({
 
 App.module("MyGenie").addRouter(MyRouter);
 
-App.start();
-
 Backbone.history.start();
 ```
 
-**Note:** Routers added after module initialization or after a module has
-started will attempt to inherit any assigned controller just as if they were
-added before initialization. However, if the Controller is also to be added
-after module startup it should be added before the Router to allow the Router
-to inherit the instantiated Controller from the module.
+**Note:** Routers added after module initialization will attempt to inherit any
+assigned controller just as if they were added before initialization. However,
+if the Controller is also to be added after module startup it should be added
+before the Router to allow the Router to inherit the instantiated Controller
+from the module.
 
 ## Associated Options
 
-When a router is added to a Genie module object, aside from the
-`router` option, the following additional options may be provided to alter
-the router's initialization process:
+When a router is added to a Genie module object, aside from the `router`
+option, the following additional options may be provided to the Genie object to
+alter the router's initialization process:
 
 *   `passStartOptionsToRouter` - boolean
 *   `routerOptions` - object

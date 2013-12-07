@@ -13,10 +13,10 @@ Further documentation and usage information can be found at
 
 ## Setup
 
-As with all Genie helper objects, the `app` and `mod` properties are set via
-option passing during instantiation by the parent Genie module and will be set
-to the correct values automatically so long as the Controller is added in one
-of the following ways:
+As with all Genie helper objects, the `app`, `mod`, and `options` properties
+are set via option passing during instantiation by the parent Genie module and
+will be set to the correct values automatically so long as the Controller is
+added in one of the following ways:
 
 *   As a property of an extended Genie module
 *   As part of the Genie module's options
@@ -108,6 +108,8 @@ var App = new Marionette.Application();
 
 App.module("MyGenie", new Genie());
 
+App.start();
+
 var MyController = Genie.Controller.extend({
   initialize: function(options){
     alert(this.mod.moduleName + " says: Your wish is my command");
@@ -115,11 +117,9 @@ var MyController = Genie.Controller.extend({
 });
 
 App.module("MyGenie").addController(MyController);
-
-App.start();
 ```
 
-**Note:** Controllers added after a module has started will not be
+**Note:** Controllers added after module initialization will not be
 automatically tied to a module's already existing `router` instance.
 
 Assigning the `router` object's controller after a module has started can be
@@ -131,8 +131,8 @@ the controller.
 ## Associated Options
 
 When a controller is added to a Genie module object, aside from the
-`controller` option, the following additional options may be provided to alter
-the controller's initialization process:
+`controller` option, the following additional options may be provided to the
+Genie object to alter the controller's initialization process:
 
 *   `passStartOptionsToController` - boolean
 *   `controllerOptions` - object
