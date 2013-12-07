@@ -1,6 +1,6 @@
 // GenieJS (Backbone.Marionette.Genie)
 // -----------------------------------
-// v0.3.5
+// v0.3.6
 // 
 // Copyright (c) 2013 Michael Spencer, Trynd, LLC
 // Distributed under the MIT license
@@ -11,7 +11,7 @@
   "use strict";
 
   var Controller, Duct, Genie, Region, Router, Vent, helperConstructor,
-    listenLocal, moduleFunctions, parseOptions, previousGenie,
+    listenLocal, listenRemote, moduleFunctions, parseOptions, previousGenie,
     previousMarionetteGenie, root;
 
   // Existing environment status
@@ -112,8 +112,13 @@
       // Retain a reference to the Genie object
       this.genie = genie;
 
+      // Retain a self reference for consistency
+      this.mod = this;
+
       // Incorporate Genie module functions
       _.extend(this, moduleFunctions);
+      this.listenLocal = listenLocal;
+      this.listenRemote = listenRemote;
 
       // Add the module's initializer
       return this.addInitializer(function(startOptions) {
@@ -545,10 +550,14 @@
     helperConstructor.apply(this, arguments);
     this.options = this.parseOptions(this.options, this.validOptions);
     if (!('local' in this.options)) {
-      this.options.local = this.mod.vent;
+      if (_.isObject(this.mod)) {
+        this.options.local = this.mod.vent;
+      }
     }
     if (!('remote' in this.options)) {
-      this.options.remote = this.app.vent;
+      if (_.isObject(this.app)) {
+        this.options.remote = this.app.vent;
+      }
     }
     this.local = this.options.local;
     this.remote = this.options.remote;
@@ -639,6 +648,22 @@
       mapper, mapperContext);
   };
 
+  // Map a message on the local vent to a callback
+  Duct.prototype.listenLocal = function(message, callback, context){
+    if (!!this.local) {
+      return this.listenTo(this.local, message, callback, context);
+    }
+    throw 'local vent not defined';
+  };
+
+  // Map a message on the remote vent to a callback
+  Duct.prototype.listenRemote = function(message, callback, context){
+    if (!!this.remote) {
+      return this.listenTo(this.remote, message, callback, context);
+    }
+    throw 'remote vent not defined';
+  };
+
   // Inherit extend() functionality
   Duct.extend = Genie.extend;
 
@@ -686,14 +711,42 @@
 
   // listenLocal()
   listenLocal = function(message, callback, context){
-    if (this.mod.duct != null) {
-      this.listenTo(this.mod.duct.local, message, callback, context);
-    } else {
-      this.listenTo(this.mod.vent, message, callback, context);
+    var target;
+    if (this.mod != null) {
+      if (this.mod.duct != null) {
+        if (this.mod.duct.local != null) {
+          target = this.mod.duct.local;
+        }
+      } else if (this.mod.vent != null) {
+        target = this.mod.vent;
+      }
     }
+    if (!!target) {
+      return this.listenTo(target, message, callback, context);
+    }
+    throw 'local vent not defined';
   };
-  _.each([Vent, Duct, Region, Controller, Router], function(helper){
+
+  // listenRemote()
+  listenRemote = function(message, callback, context){
+    var target;
+    if (this.mod != null && this.mod.duct != null) {
+      if (this.mod.duct.remote != null) {
+        target = this.mod.duct.remote;
+      }
+    } else if (this.app != null && this.app.vent != null) {
+      target = this.mod.vent;
+    }
+    if (!!target) {
+      return this.listenTo(target, message, callback, context);
+    }
+    throw 'remote vent not defined';
+  };
+
+  // Map listen* methods
+  _.each([Vent, Region, Controller, Router], function(helper){
     helper.prototype.listenLocal = listenLocal;
+    helper.prototype.listenRemote = listenRemote;
   });
 
   // Export to applicable namespaces
