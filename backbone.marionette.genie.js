@@ -2,10 +2,10 @@
 // -----------------------------------
 // v0.3.6
 // 
-// Copyright (c) 2013 Michael Spencer, Trynd, LLC
+// Copyright (c) 2013 Michael Spencer; Trynd, LLC
 // Distributed under the MIT license
 //
-// http://github.com/xmxspencer/geniejs
+// http://github.com/trynd/geniejs
 
 (function(Backbone, Marionette, _) {
   "use strict";
